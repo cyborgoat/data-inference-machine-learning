@@ -20,3 +20,28 @@
 ### True Colours
 
 - An online self-management system
+
+### Finance APIs
+
+- Google finance
+- Quandl
+- AlphaVantage
+- Tiingo
+- Stooq
+- DJI from Stooq
+
+
+### Weather APIs
+
+- Openweathermap.org
+- Wunderground.com
+- Forecast.io
+
+### Matlab functions
+
+- csvread, xlsread
+- textread, fscan
+- redtable
+- dataenum, datestr
+- find, strcmp
+- isnan
