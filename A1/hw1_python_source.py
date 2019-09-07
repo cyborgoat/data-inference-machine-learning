@@ -6,7 +6,6 @@ import math
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from scipy import interpolate
 
 
 class HW1_Solutions():
@@ -92,73 +91,65 @@ class HW1_Solutions():
 
     # Q6
     def q6_sol(self):
-
         import datetime
         import calendar
+        from datetime import timedelta
         from matplotlib.dates import (YEARLY, DateFormatter,
                                       rrulewrapper, RRuleLocator, drange)
         df = pd.read_excel('ebola_download.xls', sheet_name='Sheet1')
         df['Date'] = pd.to_datetime(df['Date'], format="%Y/%m/%d").dt.date
-        # print("Column headings:")
-        # print(df.columns)
         formatter = DateFormatter('%m/%d/%y')
         case_arr = list(df['Cases'])
         death_arr = list(df['Death'])
         date_arr = list(df['Date'])
-        # case_interpfunc = interpolate.interp1d(date_arr, case_arr)
-        # death_interpfunc = interpolate.interp1d(date_arr,death_arr)
-        # print(case_interpfunc)
-        # dt = datetime.datetime(2014, 3, 22)
-        # end = datetime.datetime(2014, 11, 13)
-        # step = datetime.timedelta(days=1)
-        # print(date_arr)
-        # date_new = []
-        # while dt < end:
-        #     # print(dt.strftime('%Y-%m-%d'))
-        #     date_new.append(dt)
-        #     dt += step
-        # # print(date_arr)
-        # # print(date_new)
-        # # test = case_interpfunc(date_new)
-        # # print(test)
+        nodays_arr = list(df['Noofdays'])
+        diff_arr = list(df['Diff'])
+        tmparr = [i for i in range(236)]
+        case_interp_arr = np.interp(tmparr, nodays_arr, case_arr)
+        death_interp_arr = np.interp(tmparr, nodays_arr, death_arr)
+        new_day_arr = [date_arr[0]+datetime.timedelta(days=i) for i in tmparr]
         case_threshold, death_threshold = {100: None, 500: None, 1000: None, 2000: None, 5000: None}, {
             100: None, 500: None, 1000: None, 2000: None, 5000: None}
-        for i in range(len(date_arr)):
-            if case_arr[i] >= 100 and case_threshold[100] == None:
+        for i in range(len(new_day_arr)):
+            if case_interp_arr[i] >= 100 and case_threshold[100] == None:
                 case_threshold[100] = i
-            if case_arr[i] >= 500 and case_threshold[500] == None:
+            if case_interp_arr[i] >= 500 and case_threshold[500] == None:
                 case_threshold[500] = i
-            if case_arr[i] >= 1000 and case_threshold[1000] == None:
+            if case_interp_arr[i] >= 1000 and case_threshold[1000] == None:
                 case_threshold[1000] = i
-            if case_arr[i] >= 2000 and case_threshold[2000] == None:
+            if case_interp_arr[i] >= 2000 and case_threshold[2000] == None:
                 case_threshold[2000] = i
-            if case_arr[i] >= 5000 and case_threshold[5000] == None:
+            if case_interp_arr[i] >= 5000 and case_threshold[5000] == None:
                 case_threshold[5000] = i
-            if death_arr[i] >= 100 and death_threshold[100] == None:
+            if death_interp_arr[i] >= 100 and death_threshold[100] == None:
                 death_threshold[100] = i
-            if death_arr[i] >= 500 and death_threshold[500] == None:
+            if death_interp_arr[i] >= 500 and death_threshold[500] == None:
                 death_threshold[500] = i
-            if death_arr[i] >= 1000 and death_threshold[1000] == None:
+            if death_interp_arr[i] >= 1000 and death_threshold[1000] == None:
                 death_threshold[1000] = i
-            if death_arr[i] >= 2000 and death_threshold[2000] == None:
+            if death_interp_arr[i] >= 2000 and death_threshold[2000] == None:
                 death_threshold[2000] = i
-            if death_arr[i] >= 5000 and death_threshold[5000] == None:
+            if death_interp_arr[i] >= 5000 and death_threshold[5000] == None:
                 death_threshold[5000] = i
-
-        # Plot part
+        print(case_threshold)
         fig, ax = plt.subplots()
-        plt.plot_date(date_arr, case_arr,'-',
-                      label='# ebola cases')
-        plt.plot_date(date_arr, death_arr,'-',
-                      label='# ebola deaths')
         case_limitarr = []
         for i in case_threshold.keys():
             case_limitarr.append(
-                (date_arr[case_threshold[i]], case_arr[case_threshold[i]]))
+                (new_day_arr[case_threshold[i]]-datetime.timedelta(days=1), case_interp_arr[case_threshold[i]]))
         death_limitarr = []
         for i in death_threshold.keys():
             death_limitarr.append(
-                (date_arr[death_threshold[i]], death_arr[death_threshold[i]]))
+                (new_day_arr[death_threshold[i]]-datetime.timedelta(days=1), death_interp_arr[death_threshold[i]]))
+
+        plt.plot_date(date_arr, case_arr, ':',
+                      label='# Ebola cases', color='m')
+        plt.plot_date(date_arr, death_arr, ':',
+                      label='# Ebola deaths', color='blue')
+        plt.plot_date(new_day_arr, case_interp_arr, '-',
+                      label='# Interpoloated ebola cases', color='green')
+        plt.plot_date(new_day_arr, death_interp_arr, '-',
+                      label='# Interpolated ebola cases', color='orange')
         plt.plot_date([i[0] for i in case_limitarr], [i[1]
                                                       for i in case_limitarr], marker='o', color='black')
         plt.plot_date([i[0] for i in death_limitarr], [i[1]
@@ -166,57 +157,67 @@ class HW1_Solutions():
         ax.xaxis.set_major_formatter(formatter)
         ax.xaxis.set_tick_params(rotation=30, labelsize=10)
         plt.legend()
-
-
-        dt = datetime.datetime(2014, 3, 22)
-        end = datetime.datetime(2014, 11, 13)
-        step = datetime.timedelta(days=1)
         # print(date_arr)
         date_new = []
-        while dt < end:
-            # print(dt.strftime('%Y-%m-%d'))
-            date_new.append(dt)
-            dt += step
-        # print(np.asarray(date_new).shape)
-        # print(np.asarray(case_arr).shape)
-        # f = interpolate.interp1d(date_arr,case_arr)
-        # plt.plot(date_new,f(date_new))
         plt.show()
         return case_limitarr, death_limitarr
 
     # Q7
     def q7_sol(self):
+        import datetime
+        import calendar
+        from datetime import timedelta
+        from matplotlib.dates import (YEARLY, DateFormatter,
+                                      rrulewrapper, RRuleLocator, drange)
         df = pd.read_excel('ebola_download.xls', sheet_name='Sheet1')
+        df['Date'] = pd.to_datetime(df['Date'], format="%Y/%m/%d").dt.date
         case_arr = list(df['Cases'])
         death_arr = list(df['Death'])
         date_arr = list(df['Date'])
+        nodays_arr = list(df['Noofdays'])
+        diff_arr = list(df['Diff'])
+        tmparr = [i for i in range(236)]
+        case_interp_arr = np.interp(tmparr, nodays_arr, case_arr)
+        death_interp_arr = np.interp(tmparr, nodays_arr, death_arr)
         case_rate = 0
         death_rate = 0
-        for i in range(1, len(case_arr)):
-            case_rate += (case_arr[i]-case_arr[i-1])/case_arr[i-1]
-        for i in range(1, len(death_arr)):
-            death_rate += (death_arr[i]-death_arr[i-1])/death_arr[i-1]
-        case_rate /= (len(case_arr)-1)
-        death_rate /= (len(death_arr)-1)
+        for i in range(1, len(case_interp_arr)):
+            case_rate += (case_interp_arr[i]-case_interp_arr[i-1])/case_interp_arr[i-1]
+        for i in range(1, len(death_interp_arr)):
+            death_rate += (death_interp_arr[i]-death_interp_arr[i-1])/death_interp_arr[i-1]
+        case_rate /= (len(case_interp_arr)-1)
+        death_rate /= (len(death_interp_arr)-1)
         print("%.5f%%" % (case_rate*100))
         print("%.5f%%" % (death_rate*100))
 
     # Q8
     def q8_sol(self):
+        import datetime
+        import calendar
+        from datetime import timedelta
+        from matplotlib.dates import (YEARLY, DateFormatter,
+                                      rrulewrapper, RRuleLocator, drange)
         df = pd.read_excel('ebola_download.xls', sheet_name='Sheet1')
+        df['Date'] = pd.to_datetime(df['Date'], format="%Y/%m/%d").dt.date
         case_arr = list(df['Cases'])
         death_arr = list(df['Death'])
         date_arr = list(df['Date'])
-        plt.plot(case_arr, death_arr)
+        nodays_arr = list(df['Noofdays'])
+        diff_arr = list(df['Diff'])
+        tmparr = [i for i in range(236)]
+        case_interp_arr = np.interp(tmparr, nodays_arr, case_arr)
+        death_interp_arr = np.interp(tmparr, nodays_arr, death_arr)
+        plt.plot(case_interp_arr, death_interp_arr)
         death2case_ratio = 0
-        for i in range(len(case_arr)):
-            death2case_ratio += death_arr[i]/case_arr[i]
-        death2case_ratio /= len(case_arr)
+        for i in range(len(case_interp_arr)):
+            death2case_ratio += death_interp_arr[i]/case_interp_arr[i]
+        death2case_ratio /= (len(case_interp_arr))
         print("Ratio: %.5f%%" % (death2case_ratio*100))
         plt.xlabel("# Cases")
         plt.ylabel("# Deaths")
         plt.show()
     # Q9
+
     def q9_sol(self):
         spyfile = open("SPY.csv", "r")
         spy_reader = csv.reader(spyfile)
@@ -273,26 +274,26 @@ class HW1_Solutions():
 
 if __name__ == "__main__":
     all_solution = HW1_Solutions()
-    # q1 = all_solution.q1_sol()
-    # print("-----Question 1-----\n", q1)
-    # q2 = all_solution.q2_sol()
-    # print("-----Question 2-----\n", q2)
-    # # deposit = 100 rate = 0.05 year = 0
-    # q3 = all_solution.q3_sol(100, 0.05, 0)
-    # print("-----Question 3-----\n", q3)
-    # q4 = all_solution.q4_sol(20000,0.01,[1,2,3])
-    # print("-----Question 4-----\n", q4)
-    # q5 = all_solution.q5_sol()
-    # print("-----Question 5-----\n", q5)
-    # q6_1, q6_2 = all_solution.q6_sol()
-    # print("-----Question 6-----")
-    # print(q6_1)
-    # print(q6_2)
-    # print("-----Question 7-----")
-    # all_solution.q7_sol()
-    # print("-----Question 8-----")
-    # all_solution.q8_sol()
-    # print("-----Question 9-----")
-    # all_solution.q9_sol()
+    q1 = all_solution.q1_sol()
+    print("-----Question 1-----\n", q1)
+    q2 = all_solution.q2_sol()
+    print("-----Question 2-----\n", q2)
+    # deposit = 100 rate = 0.05 year = 0
+    q3 = all_solution.q3_sol(100, 0.05, 0)
+    print("-----Question 3-----\n", q3)
+    q4 = all_solution.q4_sol(20000,0.01,[1,2,3])
+    print("-----Question 4-----\n", q4)
+    q5 = all_solution.q5_sol()
+    print("-----Question 5-----\n", q5)
+    q6_1, q6_2 = all_solution.q6_sol()
+    print("-----Question 6-----")
+    print(q6_1)
+    print(q6_2)
+    print("-----Question 7-----")
+    all_solution.q7_sol()
+    print("-----Question 8-----")
+    all_solution.q8_sol()
+    print("-----Question 9-----")
+    all_solution.q9_sol()
     print("-----Question 10-----")
     all_solution.q_10sol()

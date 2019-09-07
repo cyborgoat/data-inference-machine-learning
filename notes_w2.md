@@ -22,3 +22,13 @@
   - http://api.worldbank.org/countries?per_page=10&incomeLevel=LIC
 - URL based >
   - http://api.worldbank.org/incomeLevels/LIC/countries
+
+## SEPT 6
+
+### Normal Distributions
+
+$$p(x)=1\over{\sqrt{2*\pi*\sigma^2}}exp(-(x-\mu))$$
+
+
+
+
