@@ -45,4 +45,4 @@
 - dataenum, datestr
 - find, strcmp
 - isnan
-- Typing another
+- Typing
