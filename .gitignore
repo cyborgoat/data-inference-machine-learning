@@ -1,8 +1,8 @@
 *.xlsx
 *.pdf
 *.csv
-API_EN.ATM.CO2E.PC_DS2_en_csv_v2_103958/
-API_NY.GDP.PCAP.CD_DS2_en_csv_v2_129284/
-API_SE.PRM.NENR_DS2_en_csv_v2_43936/
-API_SH.STA.MALN.ZS_DS2_en_csv_v2_49604/
-API_SP.DYN.TFRT.IN_DS2_en_csv_v2_41035/
+assignment_2/API_EN.ATM.CO2E.PC_DS2_en_csv_v2_103958/
+assignment_2/API_NY.GDP.PCAP.CD_DS2_en_csv_v2_129284/
+assignment_2/API_SE.PRM.NENR_DS2_en_csv_v2_43936/
+assignment_2/API_SH.STA.MALN.ZS_DS2_en_csv_v2_49604/
+assignment_2/API_SP.DYN.TFRT.IN_DS2_en_csv_v2_41035/
