@@ -59,11 +59,22 @@
   <img width="460" height="300" src="../images/hw3_imgs/hw3_q4p2.png">
 </p>
 <center>Fig 4.2 Autocorrelation graph with upt to 20 lag</center>
-<div style="page-break-after: always;"></div>
+- From the ACF of monthly data, there is indeed evidence of seasonlity according to the P-value with different lags, whereas the graph is somehow representing symmetrical nature which ** can be treated as an evidece for the house house price is relevent sesonality**.
+- From the time series, the average house price is generally increasing over time, but with a hugh amount of drop at the year of 2018.
+-  Annualized return: 0.05698712146750675
+
 <div style="page-break-after: always;"></div>
 
-- From the ACF of monthly data, there is indeed evidence of seasonlity according to the P-value with different lags, whereas the graph is somehow representing symmetrical nature which can be treated as an evidece for the house house price is relevent to certian time periods.
-- From the time series, the average house price is generally increasing over time, but with a hugh amount of drop at the year of 2018.
--  What is the annualized return over this period as a percentage?
 
 ## Question 5
+
+
+<p align="center">
+  <img width="460" height="300" src="../images/hw3_imgs/hw3_q5p1.png">
+</p>
+<center>Fig 5.1 cumulative returns from the House market and the FTSE100 index</center>
+
+
+
+- Anualized Return = -0.027597038762867822
+- It would be better if **invested housing** at that time
