@@ -82,7 +82,6 @@ print("t-score: {} \np-value: {}".format(t,p))
   <img width="460" height="250" src="../images/hw3_imgs/hw3_q4p2.png">
 </p>
 <center>Fig 4.2 Autocorrelation graph with up to 20 lag</center>
-
 - From the ACF of monthly data, there is indeed evidence of seasonlity according to the autocorrelation with different lags, whereas the graph is somehow representing different P values for differnt time frame wich **can be treated as an evidece for the house house price is relevent sesonality**.
 - From the time series, the average house price is generally increasing over time, but with a hugh amount of drop at the year of 2018.
 -  Annualized return: 0.057661230215616824
