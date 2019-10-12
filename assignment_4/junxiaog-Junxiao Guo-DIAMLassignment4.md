@@ -7,21 +7,24 @@
 <center>Programming Language: Python</center></br>
 <center>Libraries used: csv, pandas, matplotlib, scipy, sklearn, RegscorePy, Datetime</center></br>
 <div style="page-break-after: always;"></div>
-## Question 1: Linear regression with one explanatory variable
 
+## Question 1: Linear regression with one explanatory variable
 ---
 
-- Regression Model Result:  $$Y = 0.09324143X + 0.00404784$$
-- Correlation Coefficients: 0.026551295701909897
-- What Does the result tell us: 
-- Hypothesis Used:
+- **Regression Model Result**:  $$Y = 0.09324143X + 0.00404784$$
+- **Correlation Coefficients**: 0.026551295701909897
+- **What Does the result tell us**: Since the Correlation Coefficient is very positively small, the result tells us that the FTSE index monthly return does not have a strong relationship between FTSE100 index
+- **Hypothesis test to back up**: I used 2 Sample T-test to test the null hypothesis, the result of t-statistics is:
+  - statistic=0.011406194343330636
+  - p-value=0.9909030401555481
+  - With low t-statistic and a p-value above significance for test, the null hypothesis is accepted.
 
 
 ## Question 2: Linear regression with multiple explanatory variables
 
 ---
 
-a) Calculate the corrrealtion coefficients of the aforementioned variables.
+a) Calculate the correlation coefficients of the aforementioned variables.
 ```
 ********* Correlation coefficients of the variables *********
                Apps    Enroll  Outstate  Top10perc  Top25perc
@@ -55,7 +58,7 @@ BIC Top25perc:  4223.767907533625
 BIC 'Top25Perc & Outstate':  4062.6556413233375
 ```
 
-The set of predictor variables are **sitll usful** in predicting in graduation rate if were to use BIC to select the model, becuase it has the lowest BIC value comparing to the others
+The set of predictor variables are **still useful** in predicting in graduation rate if were to use BIC to select the model, becuase it has the lowest BIC value comparing to the others
 
 e) Compare the accurate of the model using only useful predictors with the one of the model using all five predictors? 
 ```
@@ -66,7 +69,7 @@ Use 5 predictors have higher accuracy since it has lower Mean Square Error.
 
 f) Given a set of predictor corresponding to Carnegie Mellon University, what graduation rate value should the most accurate model predict? 
 
-The mosst accurate model predicts as 69.19326336%
+The most accurate model predicts as 69.19326336%
 
 
 <div style="page-break-after: always;"></div>
@@ -78,10 +81,10 @@ The mosst accurate model predicts as 69.19326336%
 
 ### My Assumption
 
-The monthly average speed violations decreseas along with time.
+The monthly average speed violations decreases along with time.
 
 
-### Methology
+### Mythology
 
 Algorithm used: Linear Regression
 
@@ -100,7 +103,7 @@ Algorithm used: Linear Regression
   <img width="460" height="300" src="../images/hw4_imgs/h4_q3p2.png">
 </p>
 <center>Fig 3.2 Test Result by Using Trained Model</center>
-The trained model mostly corretly reflected the actual result, though for the time period from Janurary 2019 to July 2019, there is a highly non-linear flucturation of the speed violations, so fo that part the model didn't reflect the true result accurately
+The trained model mostly correctly reflected the actual result, though for the time period from January 2019 to July 2019, there is a highly non-linear fluctuation of the speed violations, so fo that part the model didn't reflect the true result accurately
 
 To sum up, my assumption holds true since the trend of monthly average speed violations for the city of Chicago decreased along with time.
 
@@ -112,7 +115,7 @@ Predicted Unemployment Rate by year 2020: 11.35775739%
 
 Actual Unemployment Rate by year 2020: 3.9739999999999998%
 
-Method to evaluate accuracy of the estimate: Mean absolute percentage error by comparing with the predicted value and actual value.
+**Method to evaluate accuracy of the estimate**: Mean absolute percentage error by comparing with the predicted value and actual value.
 
 Mean absolute percentage error  = 127.84262318485848%
 
