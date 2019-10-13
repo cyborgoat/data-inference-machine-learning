@@ -7,7 +7,6 @@
 <center>Programming Language: Python</center></br>
 <center>Libraries used: csv, pandas, matplotlib, scipy, sklearn, RegscorePy, Datetime</center></br>
 <div style="page-break-after: always;"></div>
-
 ## Question 1: Linear regression with one explanatory variable
 ---
 
@@ -117,7 +116,7 @@ Actual Unemployment Rate by year 2020: 3.9739999999999998%
 
 **Method to evaluate accuracy of the estimate**: Mean absolute percentage error by comparing with the predicted value and actual value.
 
-Mean absolute percentage error  = 127.84262318485848%
+Mean absolute percentage error  = 185.80164534513926%
 
 <p align="center">
   <img width="460" height="300" src="../images/hw4_imgs/h4_q4p1.png">
