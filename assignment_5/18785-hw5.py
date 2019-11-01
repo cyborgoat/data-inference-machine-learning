@@ -42,18 +42,18 @@ def stepwise_selection(X, y,
                 print('Add Variable:  {:10} | p-value {:.5}'.format(best_feature, best_pval))
 
         # backward step
-        model = sm.OLS(y, sm.add_constant(pd.DataFrame(X[included]))).fit()
-        # print("-------------------")
-        # print(model.summary())
-        # use all coefs except intercept
-        pvalues = model.pvalues.iloc[1:]
-        worst_pval = pvalues.max() # null if pvalues is empty
-        if worst_pval > threshold_out:
-            changed=True
-            worst_feature = pvalues.argmax()
-            included.remove(worst_feature)
-            if verbose:
-                print('Drop {:30} with p-value {:.5}'.format(worst_feature, worst_pval))
+        # model = sm.OLS(y, sm.add_constant(pd.DataFrame(X[included]))).fit()
+        # # print("-------------------")
+        # # print(model.summary())
+        # # use all coefs except intercept
+        # pvalues = model.pvalues.iloc[1:]
+        # worst_pval = pvalues.max() # null if pvalues is empty
+        # if worst_pval > threshold_out:
+        #     changed=True
+        #     worst_feature = pvalues.argmax()
+        #     included.remove(worst_feature)
+        #     if verbose:
+        #         print('Drop {:30} with p-value {:.5}'.format(worst_feature, worst_pval))
         if not changed:
             break
     return included,model
@@ -118,8 +118,8 @@ def q3():
     # print(df)
     df_corr = df[df.columns[:-1]].corr()
     print(df_corr)
-    # heatmap = sns.heatmap(df_corr)
-    # plt.show()
+    heatmap = sns.heatmap(df_corr)
+    plt.show()
     # 3.3
     X = df[df.columns[:-1]]
     Y = df['Y']
@@ -139,7 +139,7 @@ def q3():
     print(sw_features)
     print(sw_model.summary())
     X['const']=1
-    sw_ypred = sw_model.predict(X[['const','BMI', 'S5', 'BP', 'S1', 'SEX', 'S2']])
+    sw_ypred = sw_model.predict(X[['const','BMI', 'S5', 'BP', 'S1', 'SEX', 'S2','AGE']])
     sw_mse = mean_squared_error(Y, sw_ypred)
     print(sw_mse)
 
@@ -212,6 +212,11 @@ def q4():
     print(model_stat.summary())
     # 4.5
     cm = confusion_matrix(y_true=Y, y_pred=binary_pred, labels=[0, 1])
+    correct = 0
+    for i in range(len(Y)):
+        if Y[i] == binary_pred[i]:
+            correct+=1
+    print(correct/len(Y))
     # heatmap = sns.heatmap(cm,annot=True)
     # plt.imshow(cm, cmap='hot', interpolation='nearest')
     # plt.show()
@@ -222,5 +227,5 @@ def q4():
 
 
 if __name__ == "__main__":
-    q3()
-    # q4()
+    # q3()
+    q4()
