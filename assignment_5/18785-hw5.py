@@ -196,6 +196,7 @@ def q4():
     pd.set_option('display.max_columns', None)
     X = train.drop(['pclass', 'sibsp', 'parch', 'fare', 'cabin', 'boat'], axis=1)
     X = X.dropna()
+    print(X.columns)
     Y = np.array(X['survived'])
     X.drop(['survived'], axis=1, inplace=True)
     model_stat = sm.Logit(Y, X).fit()

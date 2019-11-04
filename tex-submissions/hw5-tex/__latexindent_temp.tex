@@ -58,7 +58,7 @@
 	\answer{
 		Reference:
 		\begin{itemize}
-			\item {https://www.investopedia.com/terms/o/overfitting.asp}
+			\item \url{https://www.investopedia.com/terms/o/overfitting.asp}
 		\end{itemize}
 	}
 	\newpage
@@ -95,7 +95,12 @@
 	\textbf{Examples}\\
 	\textbullet { Evaluation of named entity recognition and word segmentation: F1 Score}\\
 	\textbullet { Representing how a funds movements correlates with a benchmark index: R-Squared}
+	Reference:
+	\begin{itemize}
+		\item \url{https://towardsdatascience.com/accuracy-precision-recall-or-f1-331fb37c5cb9}
+	\end{itemize}
 	}
+	
 	\subsection{1.5 Why Benchmark}
 	\answer{
 	1. Benchmark is standard against which you compare the solutions, to get a feel if the solutions are better or worse.\\\\
@@ -104,26 +109,23 @@
 	\textbf{Examples for benchmark}\\
 	\begin{itemize}
 		\item 	Multi-column Deep Neural Networks for Image Classiﬁcation on MNIST Dataset has a 0.23\% benchmark error rate.
-		\item 	Stanford Tagger 1.0 using Maximum entropy cyclic dependency network	has a benchmark accuracy of 97.24\% per token on all tokens on WSJ Dataset.
-	\end{itemize}}
-	\answer{
+		\item 	Stanford Tagger 1.0 using Maximum entropy cyclic dependency network	has a benchmark accuracy of 97.24\% per token on all tokens on WSJ Dataset.	
+	\end{itemize}
 		Reference:
 		\begin{itemize}
-			\item {https://www.quora.com/What-is-meant-by-a-benchmark-solution-in-machine-learning}
-		\end{itemize}}
+			\item \url{https://www.quora.com/What-is-meant-by-a-benchmark-solution-in-machine-learning}
+		\end{itemize}
 
+}
+	
+
+	
 	\newpage
 	\section{Machine Learning}
 	\subsection{2.1 What is Machine Learning \& Why Machine Learning}
 	\answer{
 	\textbf{What is machine learning}\\
 	Machine learning (ML) is the scientific study of algorithms and statistical models that computer systems use to perform a specific task without using explicit instructions, relying on patterns and inference instead. It is seen as a subset of artificial intelligence. Machine learning algorithms build a mathematical model based on sample data, known as "training data", in order to make predictions or decisions without being explicitly programmed to perform the task. Machine learning algorithms are used in a wide variety of applications, such as email filtering and computer vision, where it is difficult or infeasible to develop a conventional algorithm for effectively performing the task.}
-	\answer{
-		Reference:
-		\begin{itemize}
-		\item {https://towardsdatascience.com/accuracy-precision-recall-or-f1-331fb37c5cb9}
-		\end{itemize}
-	}
 	\answer{
 	\textbf{Evolution over time}\\
 	\textbullet Alan Turing Test(1950) :  A machine can actually learn, if when we communicate with it, we cannot distinguish it from another human.\\\\
@@ -181,12 +183,6 @@
 		\underline{Effects of collinearity}\\
 		When predictor variables in the same regression model are correlated, they cannot independently predict the value of the dependent variable. In other words, they explain some of the same variance in the dependent variable, which in turn reduces their statistical significance.
 	}
-	\answer{
-		Reference:
-		\begin{itemize}
-			\item {https://www.britannica.com/topic/collinearity-statistics}
-		\end{itemize}
-	}
 	\newpage
 	\subsection{3.3 Multivariate Model}
 	\answer{
@@ -204,7 +200,7 @@
 	\begin{itemize}
 		\item 'Age', 'S4', 'S5', 'S6'	
 	\end{itemize}
-	And this could be a problem of collinearity.
+	And this should not cause problem of collinearity since the correlation between those features do not have dramatic difference.
 	
 	}
 	
@@ -221,16 +217,12 @@
 		\begin{itemize}
 			\item 'BMI', 'S5', 'BP', 'S1', 'SEX', 'S2'
 		\end{itemize}
-		\underline{How does this function work}
-		\begin{itemize}
-			\item By using stepwise method, the function firtly build a fully model then drop the less significant variable one by a time, then it twicks the parameters untils the final feature numbers not change.
-		\end{itemize}
 		\underline{Summary of StepWise Model}
 		\begin{center}
 			\includegraphics[width=0.8\columnwidth]{hw5_p3q5.png}
 		\end{center}
 		$$MeanSqureError = 2876.683251787016$$
-		$$R^2 = 0.515$$
+		$$AdjustedR^2 = 0.508$$
 	}
 	
 	\newpage
@@ -247,28 +239,20 @@
 		\item start with a full model including all variables and then drop those you do not need/ are not significant 1 at a time.
 		\item It is a generalized linear model procedure using the same basic formula, but instead of the continuous $Y$, it is regressing for the probability of a categorical outcome.
 	\end{itemize}}
-	\answer{
-		Reference:
-		\begin{itemize}
-			\item {https://stats.stackexchange.com/questions/29325/what-is-the-difference-between-linear-regression-and-logistic-regression}
-		\end{itemize}
-	}
 	\subsection{4.2 Probability of Survival}
 	\answer{Titanic survival probability is :0.3819709702062643}
 	\subsection{4.3 Table of Survival Probability}
 	\answer{
 			\begin{tabular}{|l|l|}
 			\hline
-			\textbf{Feature}                    & \textbf{Survival Probability} \\ \hline
+			Feature                    & Survival Probability \\ \hline
 			Children(0-14 Years)       & 0.5700934579439252   \\ \hline
 			Youth(15-24 Years)         & 0.3879598662207358   \\ \hline
 			Adults(25-64 Years)        & 0.3974358974358974   \\ \hline
 			Senior(65 Years and older) & 0.15384615384615385  \\ \hline
-			& \\ \hline
 			Passenger Class 1          & 0.6191950464396285   \\ \hline
 			Passenger Class 2          & 0.4296028880866426   \\ \hline
 			Passenger Class 3          & 0.2552891396332863   \\ \hline
-			& \\ \hline
 			Gender: Male               & 0.19098457888493475  \\ \hline
 			Gender: Female             & 0.7274678111587983   \\ \hline
 			\end{tabular}
@@ -299,7 +283,6 @@
 
 		\includegraphics[width=0.8\columnwidth]{hw5_p4q5.png}
 	\end{center}
-	Accuracy: 0.7753346080305927
 	}
 	
 \end{document}
