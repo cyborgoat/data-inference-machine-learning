@@ -9,6 +9,8 @@
 *.jpg
 *.pl
 *.gz
+*.png
+.idea/
 /images/
 /tex-template
 /assignment_2/API_EN.ATM.CO2E.PC_DS2_en_csv_v2_103958/*
