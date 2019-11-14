@@ -20,7 +20,6 @@ from sklearn import neighbors, datasets
 from sklearn.model_selection import train_test_split
 
 
-
 def data_preprocess():
     gender = {'male': 1, 'female': 2}
     embark = {'S': 1, 'C': 2, 'Q': 3}
@@ -38,6 +37,29 @@ def data_preprocess():
     df.embarked = [embark[item] for item in df.embarked]
     df2 = pd.concat([df], axis=1)
     return df2
+
+
+def q4():
+    df_red = pd.read_csv("winequality-red.csv", sep=';')
+    df_white = pd.read_csv("winequality-white.csv", sep=';')
+    print("---red---")
+    x_features = list(df_white.columns)
+    red_mean = list(df_red.mean())
+    white_mean = list(df_white.mean())
+    # ax = plt.subplot(111)
+    x = np.arange(len(x_features))
+    print(df_red.corr())
+    print(df_white.corr())
+    # print(x)
+    # print(red_mean)
+    # print(white_mean)
+    plt.bar(x + 0.2, red_mean, width=0.2, color='red', align='center',label='Red wine')
+    plt.bar(x, white_mean, width=0.2, color='grey', align='center',label='White wine')
+    print(x_features)
+    plt.xticks(x, x_features, rotation=90)
+    plt.legend()
+    plt.show()
+
 
 def encode_target(df, target_column):
     df_mod = df.copy()
@@ -108,18 +130,18 @@ def q3(df):
     df['embarked'] = df['embarked'].fillna(embarked_port)
     df.sex = [gender[item] for item in df.sex]
     df.embarked = [embark[item] for item in df.embarked]
-    feature_cols = ['pclass', 'sex', 'age',  'survived',  'embarked']
+    feature_cols = ['pclass', 'sex', 'age', 'survived', 'embarked']
     # x_features = ['pclass', 'sex', 'age', 'sibsp','fare','embarked']
     df = df[feature_cols]
     df2 = df
     classifier = KNeighborsClassifier(n_neighbors=9)
     ytrain = df2.survived
     xtrain = df2.drop(['survived'], axis=1)
-    X,Y = xtrain.values,ytrain.values
+    X, Y = xtrain.values, ytrain.values
     scores = cross_val_score(classifier, xtrain, ytrain, cv=6)
     print(scores.mean())
     exit()
-    X = X[:,:3]
+    X = X[:, :3]
     # classifier.fit(xtrain, ytrain)
     # result = classifier.predict(xtrain)
     # print("Accuracy:", metrics.accuracy_score(result, list(ytrain)))
@@ -135,9 +157,9 @@ def q3(df):
     # calculate min, max and limits
     a_min, a_max = X[:, 0].min() - 1, X[:, 0].max() + 1
     b_min, b_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    print(b_min,b_max)
+    print(b_min, b_max)
     c_min, c_max = X[:, 2].min() - 1, X[:, 2].max() + 1
-    print(c_min,c_max)
+    print(c_min, c_max)
     # d_min, d_max = X[:, 3].min() - 1, X[:, 3].max() + 1
     # e_min, e_max = X[:, 4].min() - 1, X[:, 4].max() + 1
     # f_min, f_max = X[:, 5].min() - 1, X[:, 5].max() + 1
@@ -165,11 +187,12 @@ def q3(df):
     plt.show()
 
 
-def q4():
+# def q4():
 
 
 if __name__ == "__main__":
-    df = data_preprocess()
-    q2(df)
+    # df = data_preprocess()
+    # q2(df)
     # q2_logt_reg()
     # q3(df)
+    q4()
