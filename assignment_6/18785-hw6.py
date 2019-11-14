@@ -15,6 +15,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
+from matplotlib.colors import ListedColormap
+from sklearn import neighbors, datasets
+from sklearn.model_selection import train_test_split
+
 
 
 def data_preprocess():
@@ -75,6 +79,10 @@ def q2(df):
     clf = clf.fit(xtrain, ytrain)
     print("finished")
     reuslt = clf.predict(xtrain)
+    scores = cross_val_score(clf, xtrain, ytrain, cv=6)
+    print(scores)
+    print(scores.mean())
+    exit()
     print("Accuracy:", metrics.accuracy_score(reuslt, list(ytrain)))
     dot_data = StringIO()
     export_graphviz(clf, out_file=dot_data,
@@ -92,27 +100,76 @@ def q3(df):
     embark = {'S': 1, 'C': 2, 'Q': 3}
     df = pd.read_csv("titanic3.csv")
     feature_cols = ['pclass', 'sex', 'age', 'fare', 'survived', 'sibsp', 'embarked']
-    x_features = ['pclass', 'sex', 'age', 'sibsp']
-    df = df[feature_cols]
-    mean_age = df['age'].mean()
-    df['age'] = df['age'].fillna(mean_age)
     mean_fare = df['fare'].mean()
     df['fare'] = df['fare'].fillna(mean_fare)
+    mean_age = df['age'].mean()
+    df['age'] = df['age'].fillna(mean_age)
     embarked_port = 'S'
     df['embarked'] = df['embarked'].fillna(embarked_port)
     df.sex = [gender[item] for item in df.sex]
     df.embarked = [embark[item] for item in df.embarked]
-    df2 = pd.concat([df], axis=1)
-    classifier = KNeighborsClassifier(n_neighbors=5)
+    feature_cols = ['pclass', 'sex', 'age',  'survived',  'embarked']
+    # x_features = ['pclass', 'sex', 'age', 'sibsp','fare','embarked']
+    df = df[feature_cols]
+    df2 = df
+    classifier = KNeighborsClassifier(n_neighbors=9)
     ytrain = df2.survived
     xtrain = df2.drop(['survived'], axis=1)
-    classifier.fit(xtrain, ytrain)
-    result = classifier.predict(xtrain)
+    X,Y = xtrain.values,ytrain.values
+    scores = cross_val_score(classifier, xtrain, ytrain, cv=6)
+    print(scores.mean())
+    exit()
+    X = X[:,:3]
+    # classifier.fit(xtrain, ytrain)
+    # result = classifier.predict(xtrain)
+    # print("Accuracy:", metrics.accuracy_score(result, list(ytrain)))
+    classifier.fit(X, Y)
+    result = classifier.predict(X)
     print("Accuracy:", metrics.accuracy_score(result, list(ytrain)))
+
+    n_neighbors = 5
+    h = 0.02
+    # Create color maps
+    cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#AAAAFF'])
+    cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
+    # calculate min, max and limits
+    a_min, a_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    b_min, b_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    print(b_min,b_max)
+    c_min, c_max = X[:, 2].min() - 1, X[:, 2].max() + 1
+    print(c_min,c_max)
+    # d_min, d_max = X[:, 3].min() - 1, X[:, 3].max() + 1
+    # e_min, e_max = X[:, 4].min() - 1, X[:, 4].max() + 1
+    # f_min, f_max = X[:, 5].min() - 1, X[:, 5].max() + 1
+    xx, yy = np.meshgrid(np.arange(a_min, a_max, h),
+                         np.arange(b_min, b_max, h),
+                         np.arange(c_min, c_max, h),
+                         # np.arange(d_min, d_max, h),
+                         # np.arange(e_min, e_max, h),
+                         # np.arange(f_min, f_max, h),
+                         )
+
+    # predict class using data and kNN classifier
+    Z = classifier.predict(np.c_[xx.ravel(), yy.ravel()])
+
+    # Put the result into a color plot
+    Z = Z.reshape(xx.shape)
+    plt.figure()
+    plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
+
+    # Plot also the training points
+    plt.scatter(X[:, 0], X[:, 1], c=Y, cmap=cmap_bold)
+    plt.xlim(xx.min(), xx.max())
+    plt.ylim(yy.min(), yy.max())
+    plt.title("3-Class classification (k = %i)" % (n_neighbors))
+    plt.show()
+
+
+def q4():
 
 
 if __name__ == "__main__":
     df = data_preprocess()
     q2(df)
     # q2_logt_reg()
-    # q3()
+    # q3(df)
