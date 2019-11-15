@@ -21,6 +21,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_breast_cancer
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
 
 
 def data_preprocess():
@@ -63,7 +64,7 @@ def p2_logt_reg():
     print(X.columns)
     Y = np.array(X['survived'])
     X.drop(['survived'], axis=1, inplace=True)
-    model_stat = sm.Logit(Y, X).fit()
+    model_stat = LogisticRegression().fit(X,Y)
     ypred = model_stat.predict(X)
     binary_pred = []
     for i in ypred:
@@ -72,25 +73,25 @@ def p2_logt_reg():
         else:
             binary_pred.append(0)
     print("Accuracy:", metrics.accuracy_score(binary_pred, list(Y)))
+    print("Cross Validation Score: ",cross_val_score(LogisticRegression(), X, Y, cv=10).mean())
 
 
 class p2():
     def __init__(self, df):
-        self.x_features = ['pclass', 'sex', 'age', 'fare', 'sibsp', 'embarked']
+        self.x_features = ['pclass', 'sex', 'age']
         self.ytrain = df.survived
-        self.xtrain = df.drop(['survived'], axis=1)
+        self.xtrain = df[self.x_features]
 
     def q3(self):
         clf = tree.DecisionTreeClassifier(max_depth=5)
         clf = clf.fit(self.xtrain, self.ytrain)
         print("finished")
         reuslt = clf.predict(self.xtrain)
-        scores = cross_val_score(clf, self.xtrain, self.ytrain, cv=6)
+        scores = cross_val_score(clf, self.xtrain, self.ytrain, cv=10)
         print(scores)
         print(scores.mean())
         print("Accuracy:", metrics.accuracy_score(reuslt, list(self.ytrain)))
 
-        exit()
         dot_data = StringIO()
         export_graphviz(clf, out_file=dot_data,
                         filled=True, rounded=True,
@@ -118,7 +119,7 @@ def p3(df):
     gender = {'male': 1, 'female': 2}
     embark = {'S': 1, 'C': 2, 'Q': 3}
     df = pd.read_csv("titanic3.csv")
-    feature_cols = ['pclass', 'sex', 'age', 'fare', 'survived', 'sibsp', 'embarked']
+    feature_cols = ['pclass', 'sex', 'age', 'survived']
     mean_fare = df['fare'].mean()
     df['fare'] = df['fare'].fillna(mean_fare)
     mean_age = df['age'].mean()
@@ -127,31 +128,45 @@ def p3(df):
     df['embarked'] = df['embarked'].fillna(embarked_port)
     df.sex = [gender[item] for item in df.sex]
     df.embarked = [embark[item] for item in df.embarked]
-    feature_cols = ['pclass', 'sex', 'age', 'survived', 'embarked']
+    feature_cols = ['pclass', 'sex', 'age', 'survived']
     # x_features = ['pclass', 'sex', 'age', 'sibsp','fare','embarked']
     df = df[feature_cols]
     df2 = df
-    classifier = KNeighborsClassifier(n_neighbors=6)
-    ytrain = df2.survived
-    xtrain = df2.drop(['survived'], axis=1)
-    X, Y = xtrain.values, ytrain.values
-    scores = cross_val_score(classifier, X, Y, cv=6)
-    print(scores.mean())
-
+    result = []
+    acc = []
+    for i in range(2,11):
+        classifier = KNeighborsClassifier(n_neighbors=i)
+        ytrain = df2.survived
+        xtrain = df2.drop(['survived'], axis=1)
+        X, Y = xtrain.values, ytrain.values
+        scores = cross_val_score(classifier, X, Y, cv=10)
+        result.append(scores.mean())
+        model = classifier.fit(X,Y)
+        y_pred = model.predict(X)
+        acc.append(metrics.accuracy_score(y_true=Y,y_pred=y_pred))
+    print("Accuracy:",acc)
+    print("CrossVal:",result)
+    plt.plot(np.arange(2,11),result,label='10-Fold Cross Validation Score')
+    plt.plot(np.arange(2,11),acc,label='In sample Accuracy')
+    plt.xlabel("# of Neigbhors")
+    plt.ylabel("Performance")
+    plt.legend()
+    plt.show()
+    # exit()
     # Different Metrics
-    classifier = KNeighborsClassifier(n_neighbors=6, metric="euclidean")
-    scores = cross_val_score(classifier, X, Y, cv=6)
+    classifier = KNeighborsClassifier(n_neighbors=3, metric="euclidean")
+    scores = cross_val_score(classifier, X, Y, cv=10)
     print("eucledian", scores.mean())
-    classifier = KNeighborsClassifier(n_neighbors=6, metric="manhattan")
-    scores = cross_val_score(classifier, X, Y, cv=6)
+    classifier = KNeighborsClassifier(n_neighbors=3, metric="manhattan")
+    scores = cross_val_score(classifier, X, Y, cv=10)
     print("manhattan", scores.mean())
 
-    classifier = KNeighborsClassifier(n_neighbors=6, metric="chebyshev")
-    scores = cross_val_score(classifier, X, Y, cv=6)
+    classifier = KNeighborsClassifier(n_neighbors=3, metric="chebyshev")
+    scores = cross_val_score(classifier, X, Y, cv=10)
     print("chebyshev", scores.mean())
 
-    classifier = KNeighborsClassifier(n_neighbors=6, metric="minkowski")
-    scores = cross_val_score(classifier, X, Y, cv=6)
+    classifier = KNeighborsClassifier(n_neighbors=3, metric="minkowski")
+    scores = cross_val_score(classifier, X, Y, cv=10)
     print("minkowski", scores.mean())
 
     # classifier = KNeighborsClassifier(n_neighbors=6,metric="wminkowski")
@@ -163,54 +178,10 @@ def p3(df):
     # print("seuclidean",scores.mean())
 
     classifier = KNeighborsClassifier(n_neighbors=6, metric="mahalanobis", metric_params={'V': np.cov(X)})
-    scores = cross_val_score(classifier, X, Y, cv=6)
+    scores = cross_val_score(classifier, X, Y, cv=10)
     print("mahalanobis", scores.mean())
 
-    exit()
-    # X = X[:, :3]
-    # # classifier.fit(xtrain, ytrain)
-    # # result = classifier.predict(xtrain)
-    # # print("Accuracy:", metrics.accuracy_score(result, list(ytrain)))
-    # classifier.fit(X, Y)
-    # result = classifier.predict(X)
-    # print("Accuracy:", metrics.accuracy_score(result, list(ytrain)))
-    #
-    # n_neighbors = 5
-    # h = 0.02
-    # # Create color maps
-    # cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#AAAAFF'])
-    # cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
-    # # calculate min, max and limits
-    # a_min, a_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    # b_min, b_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    # print(b_min, b_max)
-    # c_min, c_max = X[:, 2].min() - 1, X[:, 2].max() + 1
-    # print(c_min, c_max)
-    # # d_min, d_max = X[:, 3].min() - 1, X[:, 3].max() + 1
-    # # e_min, e_max = X[:, 4].min() - 1, X[:, 4].max() + 1
-    # # f_min, f_max = X[:, 5].min() - 1, X[:, 5].max() + 1
-    # xx, yy = np.meshgrid(np.arange(a_min, a_max, h),
-    #                      np.arange(b_min, b_max, h),
-    #                      np.arange(c_min, c_max, h),
-    #                      # np.arange(d_min, d_max, h),
-    #                      # np.arange(e_min, e_max, h),
-    #                      # np.arange(f_min, f_max, h),
-    #                      )
-    #
-    # # predict class using data and kNN classifier
-    # Z = classifier.predict(np.c_[xx.ravel(), yy.ravel()])
-    #
-    # # Put the result into a color plot
-    # Z = Z.reshape(xx.shape)
-    # plt.figure()
-    # plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
-    #
-    # # Plot also the training points
-    # plt.scatter(X[:, 0], X[:, 1], c=Y, cmap=cmap_bold)
-    # plt.xlim(xx.min(), xx.max())
-    # plt.ylim(yy.min(), yy.max())
-    # plt.title("3-Class classification (k = %i)" % (n_neighbors))
-    # plt.show()
+
 
 
 class p4():
@@ -311,9 +282,9 @@ class p4():
 
 if __name__ == "__main__":
     df = data_preprocess()
-    p2(df).q4()
+    # p2(df).q3()
     # p2_logt_reg()
-    # p3(df)
+    p3(df)
     # p4().q2()
     # p4().q3()
     # p4().q4()
