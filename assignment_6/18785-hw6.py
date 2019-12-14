@@ -22,6 +22,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_breast_cancer
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
+import matplotlib.pyplot as plt
+import seaborn as sns
+import scipy.stats.pearsonr
 
 
 def data_preprocess():
@@ -57,14 +60,14 @@ def p2_logt_reg():
     pclass = pd.get_dummies(df['pclass'], drop_first=True)
     # embark = pd.get_dummies(df['embarked'], drop_first = True)
     df.drop(['sex', 'embarked', 'name', 'ticket', 'body', 'home.dest'], axis=1, inplace=True)
-    train = pd.concat([df, sex, pclass], axis=1)
+    train = pd.concat([df[['age', 'survived']], sex, pclass], axis=1)
     pd.set_option('display.max_columns', None)
-    X = train.drop(['pclass', 'sibsp', 'parch', 'fare', 'cabin', 'boat'], axis=1)
+    X = train
     X = X.dropna()
     print(X.columns)
     Y = np.array(X['survived'])
     X.drop(['survived'], axis=1, inplace=True)
-    model_stat = LogisticRegression().fit(X,Y)
+    model_stat = LogisticRegression().fit(X, Y)
     ypred = model_stat.predict(X)
     binary_pred = []
     for i in ypred:
@@ -73,7 +76,15 @@ def p2_logt_reg():
         else:
             binary_pred.append(0)
     print("Accuracy:", metrics.accuracy_score(binary_pred, list(Y)))
-    print("Cross Validation Score: ",cross_val_score(LogisticRegression(), X, Y, cv=10).mean())
+    print("Cross Validation Score: ", cross_val_score(LogisticRegression(), X, Y, cv=10).mean())
+    from sklearn.metrics import confusion_matrix
+    matrix = confusion_matrix(list(Y), binary_pred)
+    sns.heatmap(matrix)
+    plt.title('Logistic Regression Result')
+    plt.ylabel('True Label')
+    plt.xlabel('Predicted Label')
+    # plt.title('Confusion Matrix')
+    plt.show()
 
 
 class p2():
@@ -134,54 +145,21 @@ def p3(df):
     df2 = df
     result = []
     acc = []
-    for i in range(2,11):
-        classifier = KNeighborsClassifier(n_neighbors=i)
-        ytrain = df2.survived
-        xtrain = df2.drop(['survived'], axis=1)
-        X, Y = xtrain.values, ytrain.values
-        scores = cross_val_score(classifier, X, Y, cv=10)
-        result.append(scores.mean())
-        model = classifier.fit(X,Y)
-        y_pred = model.predict(X)
-        acc.append(metrics.accuracy_score(y_true=Y,y_pred=y_pred))
-    print("Accuracy:",acc)
-    print("CrossVal:",result)
-    plt.plot(np.arange(2,11),result,label='10-Fold Cross Validation Score')
-    plt.plot(np.arange(2,11),acc,label='In sample Accuracy')
-    plt.xlabel("# of Neigbhors")
-    plt.ylabel("Performance")
-    plt.legend()
+    classifier = KNeighborsClassifier(n_neighbors=5)
+    ytrain = df2.survived
+    xtrain = df2.drop(['survived'], axis=1)
+    model = classifier.fit(xtrain.values, ytrain.values)
+    # result.append(scores.mean())
+    y_pred = model.predict(xtrain)
+    print("Accucary: ", (metrics.accuracy_score(y_true=ytrain.values, y_pred=y_pred)))
+    from sklearn.metrics import confusion_matrix
+    matrix = confusion_matrix(ytrain.values, y_pred)
+    sns.heatmap(matrix)
+    plt.title('KNN Result')
+    plt.ylabel('True Label')
+    plt.xlabel('Predicted Label')
+    # plt.title('Confusion Matrix')
     plt.show()
-    # exit()
-    # Different Metrics
-    classifier = KNeighborsClassifier(n_neighbors=3, metric="euclidean")
-    scores = cross_val_score(classifier, X, Y, cv=10)
-    print("eucledian", scores.mean())
-    classifier = KNeighborsClassifier(n_neighbors=3, metric="manhattan")
-    scores = cross_val_score(classifier, X, Y, cv=10)
-    print("manhattan", scores.mean())
-
-    classifier = KNeighborsClassifier(n_neighbors=3, metric="chebyshev")
-    scores = cross_val_score(classifier, X, Y, cv=10)
-    print("chebyshev", scores.mean())
-
-    classifier = KNeighborsClassifier(n_neighbors=3, metric="minkowski")
-    scores = cross_val_score(classifier, X, Y, cv=10)
-    print("minkowski", scores.mean())
-
-    # classifier = KNeighborsClassifier(n_neighbors=6,metric="wminkowski")
-    # scores = cross_val_score(classifier, xtrain, ytrain, cv=6)
-    # print("wminkowski",scores.mean())
-
-    # classifier = KNeighborsClassifier(n_neighbors=6,metric="seuclidean")
-    # scores = cross_val_score(classifier, xtrain, ytrain, cv=6)
-    # print("seuclidean",scores.mean())
-
-    classifier = KNeighborsClassifier(n_neighbors=6, metric="mahalanobis", metric_params={'V': np.cov(X)})
-    scores = cross_val_score(classifier, X, Y, cv=10)
-    print("mahalanobis", scores.mean())
-
-
 
 
 class p4():
@@ -212,12 +190,12 @@ class p4():
         cor_red = self.df_red.corr()
         # print(cor_red["quality"])
         print(cor_white["quality"])
-        sns.heatmap(cor_white, annot=True, cmap=plt.cm.Reds)
-        plt.title("Correlation heatmap of white wine")
-        plt.show()
-        sns.heatmap(cor_red, annot=True, cmap=plt.cm.Reds)
-        plt.title("Correlation heatmap of red wine")
-        plt.show()
+        # sns.heatmap(cor_white, annot=True, cmap=plt.cm.Reds)
+        # plt.title("Correlation heatmap of white wine")
+        # plt.show()
+        # sns.heatmap(cor_red, annot=True, cmap=plt.cm.Reds)
+        # plt.title("Correlation heatmap of red wine")
+        # plt.show()
 
     def q3(self):
         Xw, Yw = self.df_white.drop(['quality'], axis=1), self.df_white['quality']
@@ -262,15 +240,21 @@ class p4():
         # classifier =
 
     def q5(self):
-        x, y = self.df_red[['volatile acidity', 'sulphates', 'alcohol']], self.df_red[['quality']]
+        x, y = self.df_red[['volatile acidity', 'residual sugar', 'chlorides',
+                            'free sulfur dioxide', 'total sulfur dioxide', 'pH', 'sulphates', 'alcohol']], \
+               self.df_red[['quality']]
         y = y.values.ravel()
-        classifier = KNeighborsRegressor(n_neighbors=5)
+        classifier = KNeighborsClassifier(n_neighbors=16,metric='seuclidean',metric_params={'V':x.var(axis=0)})
         model = classifier.fit(x, y)
         y_pred = model.predict(x)
         mse = mean_squared_error(y, y_pred)
         R_sqrd = r2_score(y, y_pred=y_pred)
         print("MSE for KNN Regression: ", mse)
         print("R^2 for KNN Regression: ", R_sqrd)
+        x, y = self.df_red[['fixed acidity', 'residual sugar', 'chlorides',
+                            'free sulfur dioxide', 'total sulfur dioxide', 'density', 'pH']], \
+               self.df_red[['quality']]
+        y = y.values.ravel()
         classifier = LinearRegression()
         model = classifier.fit(x, y)
         y_pred = model.predict(x)
@@ -281,11 +265,12 @@ class p4():
 
 
 if __name__ == "__main__":
-    df = data_preprocess()
+    # df = data_preprocess()
     # p2(df).q3()
     # p2_logt_reg()
-    p3(df)
+    # p3(df)
+    # p4().q1()
     # p4().q2()
     # p4().q3()
     # p4().q4()
-    # p4().q5()
+    p4().q5()
