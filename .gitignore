@@ -13,10 +13,13 @@
 *.jpg
 *.csv
 *.zip
+*.xlsx
+*.pdf
+*/tex/
 */__pycache__/
 .idea/
 /images/
-/tex-template
+/tex-template/
 /assignment_2/API_EN.ATM.CO2E.PC_DS2_en_csv_v2_103958/*
 /assignment_2/API_NY.GDP.PCAP.CD_DS2_en_csv_v2_129284/*
 /assignment_2/API_SE.PRM.NENR_DS2_en_csv_v2_43936/*
