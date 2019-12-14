@@ -10,6 +10,10 @@
 *.pl
 *.gz
 *.png
+*.jpg
+*.csv
+*.zip
+*/__pycache__/
 .idea/
 /images/
 /tex-template
@@ -18,3 +22,4 @@
 /assignment_2/API_SE.PRM.NENR_DS2_en_csv_v2_43936/*
 /assignment_2/API_SH.STA.MALN.ZS_DS2_en_csv_v2_49604/*
 /assignment_2/API_SP.DYN.TFRT.IN_DS2_en_csv_v2_41035/*
+/tex-submissions/
